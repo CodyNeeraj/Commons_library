@@ -1,0 +1,8 @@
+/build/
+/dist/
+/nbproject/private/profiler
+/test/
+/*.class
+/data/
+/manifest.mf
+/logs/
