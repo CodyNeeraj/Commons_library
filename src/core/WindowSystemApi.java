@@ -3,6 +3,7 @@ package core;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -10,9 +11,8 @@ import java.util.logging.Logger;
  *
  * @author Neeraj
  */
-public class SystemApi
+public class WindowSystemApi
 {
-
     /**
      * This method requires to be executed Under administrator Privileges, Else it wil returns always false
      * even if the System is using NTFS fileSystem.<br>
@@ -30,6 +30,11 @@ public class SystemApi
             String operation = "fsutil fsinfo volumeinfo C:";
             Runtime rt = Runtime.getRuntime();
             Process pr = rt.exec(operation);
+            pr.waitFor();
+            if(pr.exitValue() != 0)
+            {
+                System.out.println("Program Requires Administrator Privileges");
+            }
             BufferedReader input = new BufferedReader(new InputStreamReader(pr.getInputStream()));
             String line;
             while((line = input.readLine()) != null)
@@ -42,12 +47,13 @@ public class SystemApi
 //            brBuilder.insert(75, bk);
 //            brBuilder.delete(99, brBuilder.length());*/
         }
-        catch(IOException ex)
+        catch(IOException | InterruptedException ex)
         {
-            Logger.getLogger(SystemApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(WindowSystemApi.class.getName()).log(Level.SEVERE, null, ex);
         }
-        String isNTFS = brBuilder.delete(100, brBuilder.length()).toString().toUpperCase();
-        return isNTFS.contains("NTFS");
-
+        //  String isNTFS = brBuilder.delete(100, brBuilder.length()).toString().toUpperCase();
+        String arr[] = brBuilder.toString().split("\\s+");
+        // return isNTFS.contains("NTFS");
+        return Arrays.toString(arr).toUpperCase().contains("NTFS");
     }
 }
